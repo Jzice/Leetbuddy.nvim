@@ -113,6 +113,9 @@ function M.get_input_buffer()
 end
 
 function M.get_results_buffer()
+    if results_buffer == nil then
+        M.split()
+    end
   return results_buffer
 end
 
