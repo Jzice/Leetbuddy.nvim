@@ -118,7 +118,9 @@ function M.display_results(is_executing, buffer, json_data, method, input_path)
         insert("")
 
         local std_output = json_data["std_output_list"]
-        insert((is_cn and cn["testc"] or "Test Case") .. ": #" .. #std_output .. " ❌ ")
+        if std_output ~= nil then
+            insert((is_cn and cn["testc"] or "Test Case") .. ": #" .. #std_output .. " ❌ ")
+        end
 
         local std = utils.split_string_to_table(std_output[#std_output])
 
