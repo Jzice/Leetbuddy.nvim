@@ -230,12 +230,14 @@ function M.is_in_table(tab, val)
   return false
 end
 
-function M.encode_code_by_templ(question_id, title, content, code)
+function M.encode_code_by_templ(question_data)
     return string.format(config.code_template,
-        question_id, title,
-        content,
+        question_data.question_id, question_data.lang,
+        question_data.question_id, question_data.title,
+        config.domain, question_data.slug,
+        question_data.content,
         config.code_tmpl_start,
-        code,
+        question_data.code,
         config.code_tmpl_end
     )
 end

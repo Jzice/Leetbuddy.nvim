@@ -16,7 +16,15 @@ function M.reset_question()
 
     for _, table in ipairs(question["codeSnippets"]) do
       if table.langSlug == utils.langSlugToFileExt[ext] then
-        local code_src = utils.encode_code_by_templ( question_id, title, content, table.code)
+          local question_data = {
+              question_id = question_id,
+              slug = slug_name,
+              lang = utils.langSlugToFileExt[ext],
+              title = title,
+              content = content,
+              code = table.code,
+          }
+        local code_src = utils.encode_code_by_templ( question_data)
         vim.api.nvim_buf_set_lines(
           vim.api.nvim_get_current_buf(),
           0,

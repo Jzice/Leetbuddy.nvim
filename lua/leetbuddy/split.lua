@@ -38,16 +38,16 @@ function M.split()
     vim.cmd("vertical resize 100")
   end)
 
-  local buf_input_name = vim.api.nvim_buf_get_name(input_buffer)
-  local buf_results_name = vim.api.nvim_buf_get_name(results_buffer)
-  vim.api.nvim_create_autocmd({"BufEnter"}, {
-      pattern = {buf_input_name, buf_results_name},
-      command = "vertical resize 100",
-  })
-  vim.api.nvim_create_autocmd({"BufLeave"}, {
-      pattern = {buf_input_name, buf_results_name},
-      command = "vertical resize 20",
-  })
+  -- local buf_input_name = vim.api.nvim_buf_get_name(input_buffer)
+  -- local buf_results_name = vim.api.nvim_buf_get_name(results_buffer)
+  -- vim.api.nvim_create_autocmd({"BufEnter"}, {
+  --     pattern = {buf_input_name, buf_results_name},
+  --     command = "vertical resize 100",
+  -- })
+  -- vim.api.nvim_create_autocmd({"BufLeave"}, {
+  --     pattern = {buf_input_name, buf_results_name},
+  --     command = "vertical resize 20",
+  -- })
 
   vim.api.nvim_buf_call(results_buffer, function()
     vim.cmd("set nonumber")
