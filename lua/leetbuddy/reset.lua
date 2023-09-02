@@ -20,6 +20,9 @@ function M.reset_question()
               question_id = question_id,
               slug = slug_name,
               lang = utils.langSlugToFileExt[ext],
+              difficulty = question['difficulty'],
+              ac_rate = question['acRate'] * 100,
+              test_case = question['sampleTestCase'],
               title = title,
               content = content,
               code = table.code,
@@ -43,7 +46,16 @@ function M.reset_question()
       test_case_file:write(question["sampleTestCase"])
       test_case_file:close()
     else
-      print("Failed to open the file.")
+      print("Failed to open test_case file.")
+    end
+
+    local question_path = utils.get_question_path(question_slug)
+    local question_file = io.open(question_path, "w")
+    if question_file then
+      question_file:write(question["content"])
+      question_file:close()
+    else
+      print("Failed to open question file.")
     end
   end
 end

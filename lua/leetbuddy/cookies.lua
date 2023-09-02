@@ -72,7 +72,13 @@ function M.check_auth()
     }
   ]]
 
-  local response = curl.post(config.graphql_endpoint, { headers = headers, body = vim.json.encode({ query = query }) })
+  local response = curl.post(
+    config.graphql_endpoint,
+    {
+        headers = headers,
+        body = vim.json.encode({ query = query })
+    }
+  )
   local user_status = vim.json.decode(response["body"])["data"]["userStatus"]
   status = user_status["isSignedIn"]
   username = user_status["username"]

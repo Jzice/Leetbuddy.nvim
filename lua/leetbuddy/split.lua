@@ -2,20 +2,45 @@ local M = {}
 
 local utils = require("leetbuddy.utils")
 local config = require("leetbuddy.config")
-local cn = require("leetbuddy.display").cn
+local info = require("leetbuddy.display").info
+local i18n = require("leetbuddy.config").domain
 
 local input_buffer
 local results_buffer
 
+function M.start_problem(q_id, slug)
+  local question_slug = string.format("%04d-%s", q_id, slug)
+
+  local code_file_path = utils.get_code_file_path(question_slug, config.language)
+  local test_case_path = utils.get_test_case_path(question_slug)
+  local question_path = utils.get_question_path(question_slug)
+
+  if M.get_results_buffer() then
+    vim.api.nvim_command("LBClose")
+  end
+
+  if not utils.file_exists(code_file_path) then
+    vim.api.nvim_command(":silent !touch " .. code_file_path)
+    vim.api.nvim_command(":silent !touch " .. test_case_path)
+    vim.api.nvim_command(":silent !touch " .. question_path)
+    vim.api.nvim_command("edit! " .. code_file_path)
+    vim.api.nvim_command("LBReset")
+  else
+    vim.api.nvim_command("edit! " .. code_file_path)
+  end
+  vim.api.nvim_command("LBSplit")
+  vim.api.nvim_command("LBQuestion")
+end
+
 function M.split()
   local code_buffer = vim.api.nvim_get_current_buf()
 
-  if input_buffer ~= nil then
-    return
+  if input_buffer == nil then
+    input_buffer = vim.api.nvim_create_buf(false, false)
   end
-
-  input_buffer = vim.api.nvim_create_buf(false, false)
-  results_buffer = vim.api.nvim_create_buf(false, false)
+  if results_buffer == nil then
+    results_buffer = vim.api.nvim_create_buf(false, false)
+  end
 
   vim.api.nvim_buf_set_option(input_buffer, "swapfile", false)
   vim.api.nvim_buf_set_option(input_buffer, "buflisted", false)
@@ -24,7 +49,6 @@ function M.split()
   vim.api.nvim_buf_set_option(results_buffer, "buflisted", false)
   vim.api.nvim_buf_set_option(results_buffer, "buftype", "nofile")
   vim.api.nvim_buf_set_option(results_buffer, "filetype", "Results")
-
 
   vim.api.nvim_buf_call(code_buffer, function()
     vim.cmd("botright vsplit " .. utils.get_current_buf_test_case())
@@ -35,19 +59,8 @@ function M.split()
   end)
 
   vim.api.nvim_buf_call(code_buffer, function()
-    vim.cmd("vertical resize 100")
+    vim.cmd("vertical resize 200")
   end)
-
-  -- local buf_input_name = vim.api.nvim_buf_get_name(input_buffer)
-  -- local buf_results_name = vim.api.nvim_buf_get_name(results_buffer)
-  -- vim.api.nvim_create_autocmd({"BufEnter"}, {
-  --     pattern = {buf_input_name, buf_results_name},
-  --     command = "vertical resize 100",
-  -- })
-  -- vim.api.nvim_create_autocmd({"BufLeave"}, {
-  --     pattern = {buf_input_name, buf_results_name},
-  --     command = "vertical resize 20",
-  -- })
 
   vim.api.nvim_buf_call(results_buffer, function()
     vim.cmd("set nonumber")
@@ -57,45 +70,23 @@ function M.split()
       [".* Error.*"] = "StatusLine",
       [".*Line.*"] = "ErrorMsg",
     }
-    local extra_highlights
-
-    if config.domain == "cn" then
-      extra_highlights = {
-        [cn["res"]] = "TabLineFill",
-        [cn["acc"]] = "DiffAdd",
-        [cn["pc"]] = "DiffAdd",
-        [cn["totc"]] = "DiffAdd",
-        [cn["f_case_in"]] = "ErrorMsg",
-        [cn["wrong_ans_err"]] = "ErrorMsg",
-        [cn["failed"]] = "ErrorMsg",
-        [cn["testc"] .. ": #\\d\\+"] = "Title",
-        [cn["mem"] .. ": .*"] = "Title",
-        [cn["rt"] .. ": .*"] = "Title",
-        [cn["exp"]] = "Type",
-        [cn["out"]] = "Type",
-        [cn["exp_out"]] = "Type",
-        [cn["stdo"]] = "Type",
-        [cn["exe"] .. "..."] = "Todo",
+    local  extra_highlights = {
+        [info["res"][i18n]] = "TabLineFill",
+        [info["acc"][i18n]] = "DiffAdd",
+        [info["pc"][i18n]] = "DiffAdd",
+        [info["totc"][i18n]] = "DiffAdd",
+        [info["f_case_in"][i18n]] = "ErrorMsg",
+        [info["wrong_ans_err"][i18n]] = "ErrorMsg",
+        [info["failed"][i18n]] = "ErrorMsg",
+        [info["testc"][i18n] .. ": #\\d\\+"] = "Title",
+        [info["mem"][i18n] .. ": .*"] = "Title",
+        [info["rt"][i18n] .. ": .*"] = "Title",
+        [info["exp"][i18n]] = "Type",
+        [info["out"][i18n]] = "Type",
+        [info["exp_out"][i18n]] = "Type",
+        [info["stdo"][i18n]] = "Type",
+        [info["exe"][i18n] .. "..."] = "Todo",
       }
-    else
-      extra_highlights = {
-        ["Results"] = "TabLineFill",
-        ["Accepted"] = "DiffAdd",
-        ["Passed Cases"] = "DiffAdd",
-        ["Total Cases"] = "DiffAdd",
-        ["Failed Case Input"] = "ErrorMsg",
-        ["Wrong Answer"] = "ErrorMsg",
-        ["Failed"] = "ErrorMsg",
-        ["Test Case: #\\d\\+"] = "Title",
-        ["Memory: .*"] = "Title",
-        ["Runtime: .*"] = "Title",
-        ["Expected"] = "Type",
-        ["Input"] = "Type",
-        ["Output"] = "Type",
-        ["Std Output"] = "Type",
-        ["Executing..."] = "Todo",
-      }
-    end
 
     highlights = vim.tbl_deep_extend("force", highlights, extra_highlights)
 

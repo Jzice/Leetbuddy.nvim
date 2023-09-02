@@ -14,19 +14,33 @@ local default_config = {
   code_tmpl_end = "// @lc code = end",
   code_template = [[
 /*
-@lc app=leetcode.cn id=%d lang=%s
-
-# %d.%s
-
-https://leetcode.%s/problems/%s/description/
-
+* @lc app=leetcode.cn id=%d lang=%s
+*
+* # %d.%s
+*
+* https://leetcode.%s/problems/%s/description/
+*
+* %s (%0.2f%%)
+*
+  %s
+*
+* test case:
 %s
-
 */
 use crate::solution::*;
 %s
 %s
 %s
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test() {
+
+    }
+}
 ]],
 }
 

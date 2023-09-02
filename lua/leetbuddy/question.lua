@@ -68,19 +68,33 @@ function M.fetch_question_data(slug)
         titleSlug = slug,
     }
 
-    local query = [[
+    local query = config.domain == "cn" and [[
     query questionData($titleSlug: String!) {
         question(titleSlug: $titleSlug) {
             questionId
             questionFrontendId
+            difficulty
             sampleTestCase
-        ]] .. (config.domain == "cn" and [[
+            acRate
             title: translatedTitle
             content: translatedContent
-        ]] or [[
+            codeSnippets {
+                lang
+                langSlug
+                code
+            }
+        }
+    }
+    ]] or [[
+    query questionData($titleSlug: String!) {
+        question(titleSlug: $titleSlug) {
+            questionId
+            questionFrontendId
+            difficulty
+            sampleTestCase
+            acRate
             title
             content
-        ]]) .. [[
             codeSnippets {
                 lang
                 langSlug

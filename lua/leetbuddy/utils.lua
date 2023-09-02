@@ -187,6 +187,15 @@ function M.get_test_case_path(slug)
   return string.format("%s%s%s.txt", test_case_dir_path , sep, slug)
 end
 
+function M.get_question_path(slug)
+  local question_dir_path = string.format("%s%s%s", config.directory, sep, config.question_dir)
+  if not M.file_exists(question_dir_path) then
+    vim.api.nvim_command(string.format(":silent !mkdir %s", question_dir_path))
+  end
+
+  return string.format("%s%s%s.md", question_dir_path, sep, slug)
+end
+
 function M.get_question_number_from_file_name(file_name)
   local number = string.match(file_name, "^0*(%d+)%-")
 
@@ -235,7 +244,9 @@ function M.encode_code_by_templ(question_data)
         question_data.question_id, question_data.lang,
         question_data.question_id, question_data.title,
         config.domain, question_data.slug,
+        question_data.difficulty, question_data.ac_rate,
         question_data.content,
+        question_data.test_case,
         config.code_tmpl_start,
         question_data.code,
         config.code_tmpl_end
