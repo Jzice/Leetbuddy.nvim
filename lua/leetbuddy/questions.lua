@@ -3,6 +3,7 @@ local config = require("leetbuddy.config")
 local headers = require("leetbuddy.headers")
 local utils = require("leetbuddy.utils")
 local split = require("leetbuddy.split")
+local reload = require("leetbuddy.reset")
 
 local M = {}
 
@@ -138,7 +139,8 @@ end
 local function select_problem(prompt_bufnr)
   actions.close(prompt_bufnr)
   local problem = action_state.get_selected_entry()
-  split.start_problem(problem["value"]["frontendQuestionId"], problem["value"]["slug"])
+
+  reload.start_problem(problem["value"]["slug"])
 end
 
 local function filter_problems()

@@ -2,15 +2,10 @@ local curl = require("plenary.curl")
 local config = require("leetbuddy.config")
 local headers = require("leetbuddy.headers")
 local utils = require("leetbuddy.utils")
-local split = require("leetbuddy.split")
 local question = require("leetbuddy.question")
+local reload = require("leetbuddy.reset")
 
 local M = {}
-
-local function show_random_problem(slug)
-    local problem = question.fetch_question_data(slug)
-    split.start_problem(problem["questionFrontendId"], slug)
-end
 
 function M.getRandomQuestion()
     vim.cmd("silent !LBCheckCookies")
@@ -51,7 +46,11 @@ function M.getRandomQuestion()
             })
         }
     )
-	local resp_json = vim.json.decode(response["body"])
+    local ok, resp_json = pcall(vim.json.decode, response["body"])
+    if not ok then
+        utils.Debug("getRandomQuestion decode error: " .. response)
+        return
+    end
     if resp_json == nil or resp_json["data"] == nil then
         if config.debug then
             print("Response from " .. config.graphql_endpoint)
@@ -60,7 +59,8 @@ function M.getRandomQuestion()
         return
     end
 
-    show_random_problem(resp_json["data"]["problemsetRandomFilteredQuestion"])
+    local slug = resp_json["data"]["problemsetRandomFilteredQuestion"]
+    reload.start_problem(slug)
 end
 
 return M

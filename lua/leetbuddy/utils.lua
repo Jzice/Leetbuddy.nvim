@@ -71,14 +71,16 @@ function M.is_in_folder(file, folder)
   return string.sub(file, 1, string.len(folder)) == folder
 end
 
-function M.get_current_buf_test_case()
-    local id_slug = M.get_current_buf_id_slug_name()
-    return M.get_test_case_path(id_slug)
+function M.get_cur_buf_test_case_path()
+    local file_name = M.get_cur_buf_file_name()
+    return M.get_test_case_path(file_name)
 end
 
-function M.get_current_buf_id_slug_name()
-  local file = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
-  return string.gsub(file,  "%.[^.]+$", "")
+function M.get_cur_buf_file_name()
+  local file_name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t:r")
+  return file_name
+  -- local file = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
+  -- return string.gsub(file,  "%.[^.]+$", "")
 end
 
 function M.get_current_buf_slug_name()
@@ -137,7 +139,7 @@ function M.strip_file_extension(file)
   return file:sub(1, lastDotIndex - 1)
 end
 
-function M.format_content(content)
+function M.tr_html_to_txt(content)
     local entities = {
         { "amp", "&" },
         { "apos", "'" },
@@ -169,31 +171,31 @@ function M.format_content(content)
     return content
 end
 
-function M.get_code_file_path(slug, ext)
+function M.get_code_file_path(file_name, ext)
   local code_dir_path = string.format("%s%s%s", config.directory, sep, config.code_dir)
   if not M.file_exists(code_dir_path) then
     vim.api.nvim_command(string.format(":silent !mkdir %s", code_dir_path))
   end
 
-  return string.format("%s%s%s.%s", code_dir_path, sep, slug , ext)
+  return string.format("%s%s%s.%s", code_dir_path, sep, file_name , ext)
 end
 
-function M.get_test_case_path(slug)
+function M.get_test_case_path(file_name)
   local test_case_dir_path = string.format("%s%s%s", config.directory, sep, config.test_case_dir)
   if not M.file_exists(test_case_dir_path) then
     vim.api.nvim_command(string.format(":silent !mkdir %s", test_case_dir_path))
   end
 
-  return string.format("%s%s%s.txt", test_case_dir_path , sep, slug)
+  return string.format("%s%s%s.txt", test_case_dir_path , sep, file_name)
 end
 
-function M.get_question_path(slug)
+function M.get_question_path(file_name)
   local question_dir_path = string.format("%s%s%s", config.directory, sep, config.question_dir)
   if not M.file_exists(question_dir_path) then
     vim.api.nvim_command(string.format(":silent !mkdir %s", question_dir_path))
   end
 
-  return string.format("%s%s%s.md", question_dir_path, sep, slug)
+  return string.format("%s%s%s.md", question_dir_path, sep, file_name)
 end
 
 function M.get_question_number_from_file_name(file_name)
@@ -253,9 +255,18 @@ function M.encode_code_by_templ(question_data)
     )
 end
 
+M.Debug = function(v)
+    if config.debug then
+        print(vim.inspect(v))
+    end
+    return v
+end
+
 M.P = function(v)
-  print(vim.inspect(v))
-  return v
+    if config.debug then
+        print(vim.inspect(v))
+    end
+    return v
 end
 
 return M
