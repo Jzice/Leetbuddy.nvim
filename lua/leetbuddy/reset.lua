@@ -1,39 +1,31 @@
 local utils = require("leetbuddy.utils")
 local config = require("leetbuddy.config")
 local qdata = require("leetbuddy.question")
-local split = require("leetbuddy.split")
 
 local M = {}
-M.current_slug = vim.NIL
 M.question_data = vim.NIL
 
-function M.set_current_slug(slug)
-    M.current_slug = slug
-end
-
-function M.get_current_slug()
-    return M.current_slug
-end
-
+-- 重载问题数据
 function M.reload_question()
     if not utils.is_in_folder(vim.api.nvim_buf_get_name(0), config.directory) then
         utils.Debug("current_buf not in leetcode base dir: ".. config.directory)
         return
     end
-    local slug = utils.get_current_buf_slug_name()
+    local slug = utils.get_cur_buf_slug()
     local question_data = qdata.fetch_question_data(slug)
     if question_data == vim.NIL then
         utils.Debug("question_data is nil, slug: ".. slug)
-        return false
+        return
     end
     M.question_data = question_data
-    M.load_question(M.current_slug)
+    M.load_question(slug)
 
     vim.api.nvim_command("LBSplit")
 end
 
-function M.load_question(slug_name)
-    utils.Debug(string.format("start to load question: %s", slug_name))
+-- 加载问题
+function M.load_question(slug)
+    utils.Debug(string.format("start to load question: %s", slug))
 
     local question_id = tonumber(M.question_data["questionFrontendId"])
     local ext = config.language
@@ -44,7 +36,7 @@ function M.load_question(slug_name)
         if table.langSlug == utils.langSlugToFileExt[ext] then
             local question_src_content = {
                 question_id = question_id,
-                slug = slug_name,
+                slug = slug,
                 lang = table.langSlug,
                 difficulty = M.question_data['difficulty'],
                 ac_rate = M.question_data['acRate'] * 100,
@@ -65,7 +57,7 @@ function M.load_question(slug_name)
         end
     end
 
-    local file_name = string.format("%04d-%s", question_id, slug_name)
+    local file_name = utils.get_file_name_by_slug(question_id, slug)
     local test_case_path = utils.get_test_case_path(file_name)
     if utils.file_exists(test_case_path) then
         vim.api.nvim_command(":silent !touch " .. test_case_path)
@@ -86,7 +78,9 @@ function M.load_question(slug_name)
     local question_file = io.open(question_path, "w")
     if question_file then
         utils.Debug("write to question_file: "..question_path)
-        question_file:write(M.question_data["content"])
+        question_file:write(string.format("# %d.%s\n\n%s", 
+            M.question_data["questionFrontendId"], M.question_data["title"],
+            M.question_data["content"]))
         question_file:close()
     else
         print("Failed to open question file.")
@@ -94,21 +88,22 @@ function M.load_question(slug_name)
     return true
 end
 
+-- 开始一个问题
 function M.start_problem(slug)
-    M.set_current_slug(slug)
-
-    -- update question data
+    -- 拉取问题数据
     M.question_data = qdata.fetch_question_data(slug)
     if M.question_data == vim.NIL then
         utils.Debug("question_data is nil, slug: ".. slug)
         return false
     end
 
-    local question_id = M.question_data["questionFrontendId"]
+    local question_id = tonumber(M.question_data["questionFrontendId"])
     utils.Debug(string.format("start problem: %d.%s", question_id, slug))
 
-    local question_file_name = string.format("%04d-%s", question_id, slug)
+    local question_file_name = utils.get_file_name_by_slug(question_id, slug)
     local code_file_path = utils.get_code_file_path(question_file_name, config.language)
+
+    -- 加载源码文件
     if utils.file_exists(code_file_path) then
         utils.Debug(string.format("found code file: %s", code_file_path))
         vim.api.nvim_command("edit! " .. code_file_path)

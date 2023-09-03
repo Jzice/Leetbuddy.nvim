@@ -14,7 +14,7 @@ local default_config = {
   code_tmpl_end = "// @lc code = end",
   code_template = [[
 /*
-* @lc app=leetcode.cn id=%d lang=%s
+* @lc app=leetcode.cn id=%d lang=%s slug=%s
 *
 * # %d.%s
 *

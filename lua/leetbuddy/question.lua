@@ -130,7 +130,7 @@ function M.question()
         return
     end
 
-    local question_slug = utils.get_current_buf_slug_name()
+    local question_slug = utils.get_cur_buf_slug()
     if previous_question_slug ~= question_slug then
         question_content = utils.split_string_to_table(encode_question_content(question_slug))
         previous_question_slug = question_slug

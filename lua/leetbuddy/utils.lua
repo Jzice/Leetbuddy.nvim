@@ -77,19 +77,21 @@ function M.get_cur_buf_test_case_path()
 end
 
 function M.get_cur_buf_file_name()
-  local file_name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t:r")
-  return file_name
-  -- local file = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
-  -- return string.gsub(file,  "%.[^.]+$", "")
+  return vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t:r")
+  --return file_name
 end
 
-function M.get_current_buf_slug_name()
-  local file = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
-  return M.get_question_slug(file)
+function M.get_cur_buf_slug()
+  local file = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t:r")
+  return M.get_slug_by_file(file)
 end
 
-function M.get_question_slug(file)
-  return string.gsub(string.gsub(file, "^%d+%-", ""), "%.[^.]+$", "")
+function M.get_slug_by_file(file)
+  return string.gsub(string.gsub(file, "^%d+%.", ""), "%.[^.]+$", "")
+end
+
+function M.get_file_name_by_slug(question_id, slug)
+    return string.format("%d.%s", question_id, slug)
 end
 
 function M.read_file_contents(path)
@@ -243,7 +245,7 @@ end
 
 function M.encode_code_by_templ(question_data)
     return string.format(config.code_template,
-        question_data.question_id, question_data.lang,
+        question_data.question_id, question_data.lang,question_data.slug,
         question_data.question_id, question_data.title,
         config.domain, question_data.slug,
         question_data.difficulty, question_data.ac_rate,

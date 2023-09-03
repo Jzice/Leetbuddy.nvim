@@ -25,12 +25,12 @@ local function submit_task(mode)
     local code = utils.read_file_contents(vim.fn.expand("%:p"))
     code = utils.get_content_by_range(code, config.code_tmpl_start, config.code_tmpl_end)
 
-    local question_slug = utils.get_question_slug(file)
+    local question_slug = utils.get_slug_by_file(file)
 
     local endpoint_url = string.format("%s/problems/%s/%s/", config.website, question_slug, request_mode[mode]["endpoint"])
 
     local extra_headers = {
-        ["Referer"] = string.format("%s/problems/%s", config.website, utils.get_question_slug(question_slug))
+        ["Referer"] = string.format("%s/problems/%s", config.website, utils.get_slug_by_file(question_slug))
     }
 
     local new_headers = vim.tbl_deep_extend("force", headers, extra_headers)
@@ -69,7 +69,7 @@ end
 local function check_task(id, mode)
     local json_data
 
-    local question_slug = utils.get_current_buf_slug_name()
+    local question_slug = utils.get_cur_buf_slug()
     local extra_headers = {
         ["Referer"] = string.format("%s/problems/%s/submissions/", config.website, question_slug),
     }

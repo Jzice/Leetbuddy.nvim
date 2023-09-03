@@ -8,6 +8,7 @@ local i18n = require("leetbuddy.config").domain
 local test_case_buffer_id
 local results_buffer_id
 
+-- 分割窗口
 function M.split()
     local code_buffer_id = vim.api.nvim_get_current_buf()
     if code_buffer_id == nil then
@@ -114,7 +115,6 @@ function M.close_split()
         end)
         vim.cmd("silent! bd " .. test_case_buffer_id)
         vim.cmd("silent! bd! " .. utils.get_test_case_path(file_name))
-        --utils.Debug(string.format("delete test_case_buffer: %d [%s]", test_case_buffer_id, file_name) )
         test_case_buffer_id = nil
     end
 
