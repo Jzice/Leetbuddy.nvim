@@ -1,4 +1,5 @@
 local config = require("leetbuddy.config")
+local template = require("leetbuddy.template")
 local sep = require("plenary.path").path.sep
 
 M = {}
@@ -244,16 +245,20 @@ function M.is_in_table(tab, val)
 end
 
 function M.encode_code_by_templ(question_data)
-    return string.format(config.code_template,
+    local code_template = template[question_data.lang]
+    if code_template == nil then
+        return question_data.code
+    end
+    return string.format(code_template.code,
         question_data.question_id, question_data.lang,question_data.slug,
         question_data.question_id, question_data.title,
         config.domain, question_data.slug,
         question_data.difficulty, question_data.ac_rate,
         question_data.content,
         question_data.test_case,
-        config.code_tmpl_start,
+        code_template.code_tmpl_start,
         question_data.code,
-        config.code_tmpl_end
+        code_template.code_tmpl_end
     )
 end
 

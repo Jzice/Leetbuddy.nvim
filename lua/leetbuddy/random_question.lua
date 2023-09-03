@@ -2,7 +2,6 @@ local curl = require("plenary.curl")
 local config = require("leetbuddy.config")
 local headers = require("leetbuddy.headers")
 local utils = require("leetbuddy.utils")
-local question = require("leetbuddy.question")
 local reload = require("leetbuddy.reset")
 
 local M = {}
