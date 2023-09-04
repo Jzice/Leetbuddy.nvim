@@ -110,7 +110,15 @@ function M.file_exists(name)
    return f ~= nil and io.close(f)
 end
 --
-function M.get_content_by_range(content, start_flag, end_flag)
+function M.get_content_by_range(content)
+    local lang = M.langSlugToFileExt[config.language]
+    if lang == nil or template[lang] == nil then
+        return content
+    end
+
+    local start_flag = template[lang]["code_tmpl_start"]
+    local end_flag = template[lang]["code_tmpl_end"]
+
     local from = nil
     if start_flag ~= nil then
         local _from = string.find(content, start_flag)

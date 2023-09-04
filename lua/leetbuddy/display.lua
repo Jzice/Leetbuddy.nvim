@@ -17,6 +17,7 @@ local info = {
     mem = { cn = "内存消耗", com = "Memory"},
     rt = { cn = "执行用时", com = "Runtime"},
     r_err = { cn = "执行出错", com = "Runtime Error"},
+    compile_error = { cn = "编译错误", com = "Compile Error"},
     tl_err = { cn = "超出时间限制", com = "Time Limit Exceeded"},
     wrong_ans_err = { cn = "解答错误", com = "Wrong Answer"},
     failed = { cn = "失败的", com = "Failed"},
@@ -72,7 +73,7 @@ function M.display_results(is_executing, buffer, json_data, method, input_path)
                 "%s: %d / %s: %d",
                info["pc"][i18n],
                json_data["total_correct"],
-               info["failed"][i18n], 
+               info["failed"][i18n],
                (json_data["total_testcases"] - json_data["total_correct"])
             )
           )
@@ -101,11 +102,9 @@ function M.display_results(is_executing, buffer, json_data, method, input_path)
             if json_data["code_answer"][i] == json_data["expected_code_answer"][i] then
               insert(
                 string.format("%s:# %d: %s %s",
-                info["testc"][i18n],
-                  i,
-                  json_data["code_answer"][i],
-                  " ✔️ "
-              ))
+                  info["testc"][i18n], i, json_data["code_answer"][i], " ✔️ "
+                )
+              )
             end
           end
         end
@@ -127,6 +126,11 @@ function M.display_results(is_executing, buffer, json_data, method, input_path)
         if #std > 0 then
           insert(info["stdo"][i18n] .. ": ")
           insert_table(std)
+        end
+
+        local compile_error = json_data["compile_error"]
+        if compile_error ~= nil then
+            insert(info["compile_error"][i18n]..": ".. compile_error)
         end
       end
       insert("")

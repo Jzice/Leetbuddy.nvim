@@ -10,38 +10,6 @@ local default_config = {
   code_dir = "solution",
   test_case_dir = "test_case",
   question_dir = "question",
-  code_tmpl_start = "// @lc code = start",
-  code_tmpl_end = "// @lc code = end",
-  code_template = [[
-/*
-* @lc app=leetcode.cn id=%d lang=%s slug=%s
-*
-* # %d.%s
-*
-* https://leetcode.%s/problems/%s/description/
-*
-* %s (%0.2f%%)
-*
-  %s
-*
-* test case:
-%s
-*/
-use crate::solution::*;
-%s
-%s
-%s
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test() {
-
-    }
-}
-]],
 }
 
 return default_config

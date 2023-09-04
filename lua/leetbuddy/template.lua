@@ -1,8 +1,8 @@
 
 local template_config = {
-    ["python"] = {
-        ["code_tmpl_start"] = "# @lc code = start",
-        ["code_tmpl_end"] = "# @lc code = end",
+    ["python3"] = {
+        ["code_tmpl_start"] = "# @lc code=start",
+        ["code_tmpl_end"] = "# @lc code=end",
         ["code"] = [[
 ''' 
 # @lc app=leetcode.cn id=%d lang=%s slug=%s
@@ -27,14 +27,13 @@ local template_config = {
 %s
 #
 if __name__ == "__main__":
-    s = Solution()
-    # todo: test s
+    pass
 
         ]],
     },
     ["rust"] = {
-        ["code_tmpl_start"] = "// @lc code = start",
-        ["code_tmpl_end"] = "// @lc code = end",
+        ["code_tmpl_start"] = "// @lc code=start",
+        ["code_tmpl_end"] = "// @lc code=end",
         ["code"] = [[
 /*
 * @lc app=leetcode.cn id=%d lang=%s slug=%s
@@ -67,8 +66,8 @@ mod tests {
         ]],
     },
     ["java"] = {
-        ["code_tmpl_start"] = "// @lc code = start",
-        ["code_tmpl_end"] = "// @lc code = end",
+        ["code_tmpl_start"] = "// @lc code=start",
+        ["code_tmpl_end"] = "// @lc code=end",
         ["code"] = [[
 /*
 * @lc app=leetcode.cn id=%d lang=%s slug=%s
@@ -97,8 +96,8 @@ public static int main() {
         ]],
     },
     ["cpp"] = {
-        ["code_tmpl_start"] = "// @lc code = start",
-        ["code_tmpl_end"] = "// @lc code = end",
+        ["code_tmpl_start"] = "// @lc code=start",
+        ["code_tmpl_end"] = "// @lc code=end",
         ["code"] = [[
 /*
 * @lc app=leetcode.cn id=%d lang=%s slug=%s
@@ -127,8 +126,8 @@ int main() {
         ]],
     },
     ["c"] = {
-        ["code_tmpl_start"] = "// @lc code = start",
-        ["code_tmpl_end"] = "// @lc code = end",
+        ["code_tmpl_start"] = "// @lc code=start",
+        ["code_tmpl_end"] = "// @lc code=end",
         ["code"] = [[
 /*
 * @lc app=leetcode.cn id=%d lang=%s slug=%s
@@ -155,8 +154,8 @@ int main() {
         ]],
     },
     ["go"] = {
-        ["code_tmpl_start"] = "// @lc code = start",
-        ["code_tmpl_end"] = "// @lc code = end",
+        ["code_tmpl_start"] = "// @lc code=start",
+        ["code_tmpl_end"] = "// @lc code=end",
         ["code"] = [[
 /*
 * @lc app=leetcode.cn id=%d lang=%s slug=%s

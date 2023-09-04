@@ -23,7 +23,8 @@ local M = {}
 local function submit_task(mode)
     local file = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
     local code = utils.read_file_contents(vim.fn.expand("%:p"))
-    code = utils.get_content_by_range(code, config.code_tmpl_start, config.code_tmpl_end)
+
+    code = utils.get_content_by_range(code)
 
     local question_slug = utils.get_slug_by_file(file)
 
