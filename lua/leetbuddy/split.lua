@@ -42,21 +42,16 @@ function M.split()
 
     local test_case_path = utils.get_cur_buf_test_case_path()
 
-    -- 关闭测试用例buf为非当前代码对应buf
-    -- if test_case_buffer_id ~= nil and vim.api.nvim_buf_get_name(test_case_buffer_id) ~= test_case_path then
-    --     vim.cmd(string.format("silent! bd %d", test_case_buffer_id))
-    --     utils.Debug("split(): old test_buffer not current code buf, close it: "..test_case_buffer_id)
-    --     test_case_buffer_id = nil
-    -- end
-
     -- 初始测试用例buffer
     if test_case_buffer_id == nil then
         test_case_buffer_id = vim.api.nvim_create_buf(false, false)
         utils.Debug(string.format("create test_case_buf: %d", test_case_buffer_id))
-        --vim.api.nvim_buf_set_name(test_case_buffer_id, test_case_path)
         vim.api.nvim_buf_set_option(test_case_buffer_id, "swapfile", false)
         vim.api.nvim_buf_set_option(test_case_buffer_id, "buflisted", false)
+    end
 
+    -- 如果buffer为隐藏的，则加载buffer
+    if vim.fn.bufwinid(test_case_buffer_id) == -1 then
         vim.api.nvim_buf_call(code_buffer_id, function()
             vim.cmd(string.format("vert sb %d", test_case_buffer_id))
         end)
@@ -68,16 +63,18 @@ function M.split()
     if test_file ~= nil then
         local file_content = test_file:read("*a")
         io.close(test_file)
-        vim.api.nvim_buf_set_lines(test_case_buffer_id, 0, -1, false, utils.split_string_to_table(file_content)
+        vim.api.nvim_buf_set_lines(test_case_buffer_id,
+            0, -1, false, utils.split_string_to_table(file_content)
         )
     end
+
     vim.api.nvim_buf_call(test_case_buffer_id, function()
         vim.cmd("vertical resize 30")
-        --vim.cmd("set nobuflisted")
     end)
+
     utils.Debug(string.format("split(): load buffer id %d %s ", test_case_buffer_id, test_case_path))
 
-    -- 初始化结果buffer窗口
+    -- 初始化result_buffer
     if results_buffer_id == nil then
         results_buffer_id = vim.api.nvim_create_buf(false, false)
         utils.Debug(string.format("create result_buf: %d", results_buffer_id))
@@ -85,12 +82,17 @@ function M.split()
         vim.api.nvim_buf_set_option(results_buffer_id, "buflisted", false)
         vim.api.nvim_buf_set_option(results_buffer_id, "buftype", "nofile")
         vim.api.nvim_buf_set_option(results_buffer_id, "filetype", "Results")
+    end
+
+    -- 显示result_buffer窗口
+    if vim.fn.bufwinid(results_buffer_id) == -1 then
         vim.api.nvim_buf_call(test_case_buffer_id, function()
             vim.cmd("rightbelow split +buffer" .. results_buffer_id)
         end)
         vim.api.nvim_buf_call(results_buffer_id, function()
             vim.cmd("set nonumber")
             vim.cmd("set norelativenumber")
+            vim.cmd("set wrap")
 
             for match, group in pairs(highlights) do
                 vim.fn.matchadd(group, match)

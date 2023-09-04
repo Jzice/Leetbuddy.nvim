@@ -119,13 +119,12 @@ function M.display_results(is_executing, buffer, json_data, method, input_path)
         local std_output = json_data["std_output_list"]
         if std_output ~= nil then
             insert(info["testc"][i18n] .. ": #" .. #std_output .. " ❌ ")
-        end
+            local std = utils.split_string_to_table(std_output[#std_output])
 
-        local std = utils.split_string_to_table(std_output[#std_output])
-
-        if #std > 0 then
-          insert(info["stdo"][i18n] .. ": ")
-          insert_table(std)
+            if #std > 0 then
+                insert(info["stdo"][i18n] .. ": ")
+                insert_table(std)
+            end
         end
 
         local compile_error = json_data["compile_error"]

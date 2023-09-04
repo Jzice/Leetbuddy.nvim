@@ -278,9 +278,7 @@ M.Debug = function(v)
 end
 
 M.P = function(v)
-    if config.debug then
-        print(vim.inspect(v))
-    end
+    print(vim.inspect(v))
     return v
 end
 
