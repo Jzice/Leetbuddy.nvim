@@ -2,9 +2,10 @@ local curl = require("plenary.curl")
 local config = require("leetbuddy.config")
 local headers = require("leetbuddy.headers")
 local utils = require("leetbuddy.utils")
-local question = require("leetbuddy.question")
+local question_data = require("leetbuddy.question_data")
 local display = require("leetbuddy.display")
 local split = require("leetbuddy.split")
+local reset = require("leetbuddy.reset")
 
 local timer = vim.loop.new_timer()
 local request_mode = {
@@ -21,12 +22,10 @@ local request_mode = {
 local M = {}
 
 local function submit_task(mode)
-    local file = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
     local code = utils.read_file_contents(vim.fn.expand("%:p"))
-
     code = utils.get_content_by_range(code)
 
-    local question_slug = utils.get_slug_by_file(file)
+    local question_slug = utils.get_cur_buf_slug()
 
     local endpoint_url = string.format("%s/problems/%s/%s/", config.website, question_slug, request_mode[mode]["endpoint"])
 
@@ -38,12 +37,20 @@ local function submit_task(mode)
 
     local body = {
         lang = utils.langSlugToFileExt[utils.get_file_extension(vim.fn.expand("%:t"))],
-        question_id = question.get_question_id(question_slug),
+        question_id = question_data.get_question_id(question_slug),
         typed_code = code,
     }
 
     if mode == "test" then
         local input_path = utils.get_cur_buf_test_case_path()
+        if not utils.file_exists(input_path) then
+            if reset.load_question(question_slug) then
+                split.split()
+            else
+                print("load test data failed.")
+                return
+            end
+        end
         local test_body_extra = {
             data_input = utils.read_file_contents(input_path),
             judge_type = "small",

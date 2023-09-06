@@ -2,6 +2,7 @@ local curl = require("plenary.curl")
 local config = require("leetbuddy.config")
 local headers = require("leetbuddy.headers")
 local utils = require("leetbuddy.utils")
+local log = require("leetbuddy.log")
 local reload = require("leetbuddy.reset")
 
 local M = {}
@@ -47,7 +48,7 @@ function M.getRandomQuestion()
     )
     local ok, resp_json = pcall(vim.json.decode, response["body"])
     if not ok then
-        utils.Debug("getRandomQuestion decode error: " .. response)
+        log.Debug("getRandomQuestion decode error: " .. response)
         return
     end
     if resp_json == nil or resp_json["data"] == nil then

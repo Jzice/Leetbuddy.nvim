@@ -1,6 +1,7 @@
 local M = {}
 
 local utils = require("leetbuddy.utils")
+local log = require("leetbuddy.log")
 local config = require("leetbuddy.config")
 local info = require("leetbuddy.display").info
 local i18n = require("leetbuddy.config").domain
@@ -36,7 +37,7 @@ highlights = vim.tbl_deep_extend("force", highlights, extra_highlights)
 function M.split()
     local code_buffer_id = vim.api.nvim_get_current_buf()
     if code_buffer_id == nil then
-        utils.Debug("M.split() code_buffer_id is nil")
+        log.Debug("M.split() code_buffer_id is nil")
         return
     end
 
@@ -45,7 +46,7 @@ function M.split()
     -- 初始测试用例buffer
     if test_case_buffer_id == nil then
         test_case_buffer_id = vim.api.nvim_create_buf(false, false)
-        utils.Debug(string.format("create test_case_buf: %d", test_case_buffer_id))
+        log.Debug(string.format("create test_case_buf: %d", test_case_buffer_id))
         vim.api.nvim_buf_set_option(test_case_buffer_id, "swapfile", false)
         vim.api.nvim_buf_set_option(test_case_buffer_id, "buflisted", false)
     end
@@ -55,7 +56,7 @@ function M.split()
         vim.api.nvim_buf_call(code_buffer_id, function()
             vim.cmd(string.format("vert sb %d", test_case_buffer_id))
         end)
-        utils.Debug("split(): vsplit test_case buffer id: "..test_case_buffer_id)
+        log.Debug("split(): vsplit test_case buffer id: "..test_case_buffer_id)
     end
 
     -- 加载测试用例数据到buffer
@@ -72,12 +73,12 @@ function M.split()
         vim.cmd("vertical resize 30")
     end)
 
-    utils.Debug(string.format("split(): load buffer id %d %s ", test_case_buffer_id, test_case_path))
+    log.Debug(string.format("split(): load buffer id %d %s ", test_case_buffer_id, test_case_path))
 
     -- 初始化result_buffer
     if results_buffer_id == nil then
         results_buffer_id = vim.api.nvim_create_buf(false, false)
-        utils.Debug(string.format("create result_buf: %d", results_buffer_id))
+        log.Debug(string.format("create result_buf: %d", results_buffer_id))
         vim.api.nvim_buf_set_option(results_buffer_id, "swapfile", false)
         vim.api.nvim_buf_set_option(results_buffer_id, "buflisted", false)
         vim.api.nvim_buf_set_option(results_buffer_id, "buftype", "nofile")
@@ -124,7 +125,7 @@ end
 local function close_buffer_window(win)
     local num = vim.api.nvim_win_get_number(win) - 1
     vim.cmd(num .. "close")
-    utils.Debug(string.format("close buffer win: %d", num))
+    log.Debug(string.format("close buffer win: %d", num))
 end
 
 function M.close_extern_panel()

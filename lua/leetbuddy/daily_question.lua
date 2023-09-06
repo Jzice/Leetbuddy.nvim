@@ -2,7 +2,7 @@ local curl = require("plenary.curl")
 local config = require("leetbuddy.config")
 local headers = require("leetbuddy.headers")
 local reload = require("leetbuddy.reset")
-local utils = require("leetbuddy.utils")
+local log = require("leetbuddy.log")
 
 local M = {}
 
@@ -35,7 +35,7 @@ function M.getDailyQuestion()
 
     local ok, data = pcall(vim.json.decode, response["body"])
     if not ok then
-        utils.Debug("cookies decode error: " .. response)
+        log.Debug("cookies decode error: " .. response)
         return
     end
     local todayRecord = data["data"]["todayRecord"]

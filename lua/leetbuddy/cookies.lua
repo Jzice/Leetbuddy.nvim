@@ -2,7 +2,7 @@ local curl = require("plenary.curl")
 local config = require("leetbuddy.config")
 local path = require("plenary.path")
 local sep = require("plenary.path").path.sep
-local utils = require("leetbuddy.utils")
+local log = require("leetbuddy.log")
 local cookie_file = path:new(vim.loop.os_homedir() .. sep .. ".lbcookie")
 local vars = { "leetcode_session", "csrf_token" }
 local dir = path:new(config.directory)
@@ -83,7 +83,7 @@ function M.check_auth()
 
   local ok, data = pcall(vim.json.decode, response["body"])
   if not ok then
-      utils.Debug("cookies decode error: " .. response)
+      log.Debug("cookies decode error: " .. response)
       return
   end
   local user_status = data["data"]["userStatus"]

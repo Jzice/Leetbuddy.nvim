@@ -2,7 +2,7 @@ local config = require("leetbuddy.config")
 local template = require("leetbuddy.template")
 local sep = require("plenary.path").path.sep
 
-M = {}
+local M = {}
 
 M.langSlugToFileExt = {
   ["cpp"] = "cpp",
@@ -24,6 +24,11 @@ M.langSlugToFileExt = {
   ["ex"] = "elixir",
   ["dart"] = "dart",
 }
+
+function M.file_exists(name)
+   local f = io.open(name, "r")
+   return f ~= nil and io.close(f)
+end
 
 function M.split_string_to_table(str)
   local lines = {}
@@ -72,19 +77,51 @@ function M.is_in_folder(file, folder)
   return string.sub(file, 1, string.len(folder)) == folder
 end
 
+function M.get_cur_buf_file_name()
+    local slug = M.get_cur_buf_slug()
+    local question_id = M.get_cur_buf_question_id()
+    if question_id ~= nil then
+        return M.get_file_name_by_slug(question_id, slug)
+    end
+    return vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t:r")
+end
+
 function M.get_cur_buf_test_case_path()
     local file_name = M.get_cur_buf_file_name()
     return M.get_test_case_path(file_name)
 end
 
-function M.get_cur_buf_file_name()
-  return vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t:r")
-  --return file_name
+
+function M.get_cur_buf_question_id()
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    for _, line in ipairs(lines)  do
+        local _, s0 = string.find(line, "@lc app=leetcode")
+        if s0 then
+            local _, s1 = string.find(line, "id=")
+            local s2 = string.find(line, "lang=")
+            local id = string.sub(line, s1+1, s2-1)
+            return tonumber(id)
+        end
+    end
+
+    return nil
 end
 
 function M.get_cur_buf_slug()
-  local file = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t:r")
-  return M.get_slug_by_file(file)
+    local pattern_prefix = string.format("%s/problems/", config.website)
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    for _, line in ipairs(lines)  do
+        local _, s1 = string.find(line, pattern_prefix)
+        if s1 then
+            local s2 = string.find(line, "/description")
+            local slug = string.sub(line, s1+1, s2-1)
+            return slug
+        end
+    end
+
+    local file_path = vim.api.nvim_buf_get_name(0)
+    local file = vim.fn.fnamemodify(file_path, ":t:r")
+    return M.get_slug_by_file(file)
 end
 
 function M.get_slug_by_file(file)
@@ -105,10 +142,6 @@ function M.read_file_contents(path)
   return nil
 end
 
-function M.file_exists(name)
-   local f = io.open(name, "r")
-   return f ~= nil and io.close(f)
-end
 --
 function M.get_content_by_range(content)
     local lang = M.langSlugToFileExt[config.language]
@@ -268,18 +301,6 @@ function M.encode_code_by_templ(question_data)
         question_data.code,
         code_template.code_tmpl_end
     )
-end
-
-M.Debug = function(v)
-    if config.debug then
-        print(vim.inspect(v))
-    end
-    return v
-end
-
-M.P = function(v)
-    print(vim.inspect(v))
-    return v
 end
 
 return M
