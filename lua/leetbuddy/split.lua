@@ -59,7 +59,15 @@ function M.split()
         log.Debug("split(): vsplit test_case buffer id: "..test_case_buffer_id)
     end
 
-    -- 加载测试用例数据到buffer
+    vim.api.nvim_buf_call(test_case_buffer_id, function()
+        -- vim.cmd("e! "..test_case_path)
+        vim.cmd("vertical resize 30")
+        vim.cmd("set wfw")
+        vim.cmd("set nobuflisted")
+        log.Debug("split(): test_case load: ".. test_case_path)
+    end)
+
+    -- -- 加载测试用例数据到buffer
     local test_file = io.open(test_case_path, "r")
     if test_file ~= nil then
         local file_content = test_file:read("*a")
@@ -68,12 +76,6 @@ function M.split()
             0, -1, false, utils.split_string_to_table(file_content)
         )
     end
-
-    vim.api.nvim_buf_call(test_case_buffer_id, function()
-        vim.cmd("vertical resize 30")
-    end)
-
-    log.Debug(string.format("split(): load buffer id %d %s ", test_case_buffer_id, test_case_path))
 
     -- 初始化result_buffer
     if results_buffer_id == nil then

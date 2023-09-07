@@ -52,9 +52,6 @@ local function display_question_content(contents, oldqbufnr)
   return Qbufnr
 end
 
-local function encode_question_content(slug)
-end
-
 function M.question()
     local slug = utils.get_cur_buf_slug()
     if M.pre_slug ~= slug then
