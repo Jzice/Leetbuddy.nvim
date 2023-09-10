@@ -49,7 +49,7 @@ if __name__ == "__main__":
 * test case:
 %s
 */
-use crate::solution::*;
+struct Solution;
 %s
 %s
 %s
