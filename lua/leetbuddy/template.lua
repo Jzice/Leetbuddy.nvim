@@ -5,19 +5,25 @@ local template_config = {
         ["code_tmpl_end"] = "# @lc code=end",
         ["code"] = [[
 ''' 
+#
+# # [%d.%s](https://leetcode.%s/problems/%s/description/)
+#
 # @lc app=leetcode.cn id=%d lang=%s slug=%s
 #
-# %d.%s
-#
-# https://leetcode.%s/problems/%s/description/
+# ## 状态
 #
 # %s (%0.2f%%)
-
-%s
-
-# test case:
-%s
-
+#
+# ## 问题描述
+#
+# %s
+#
+# ## 测试用例
+#
+# ```text
+#   %s
+# ```
+#
 '''
 #
 %s
@@ -35,21 +41,28 @@ if __name__ == "__main__":
         ["code_tmpl_start"] = "// @lc code=start",
         ["code_tmpl_end"] = "// @lc code=end",
         ["code"] = [[
-/*
-* @lc app=leetcode.cn id=%d lang=%s slug=%s
-*
-* # %d.%s
-*
-* https://leetcode.%s/problems/%s/description/
-*
-* %s (%0.2f%%)
-*
-%s
-*
-* test case:
-%s
-*/
-struct Solution;
+/*!
+ * # [%d.%s](https://leetcode.%s/problems/%s/description/)
+ *
+ * @lc app=leetcode.cn id=%d lang=%s slug=%s
+ *
+ * ## 状态
+ *
+ * %s (%0.2f%%)
+ *
+ * ## 问题描述 
+ *
+ * %s
+ *
+ * ## 测试用例
+ *
+ * ```text
+ *  %s
+ * ```
+ */
+
+use super::*;
+
 %s
 %s
 %s
@@ -69,20 +82,25 @@ mod tests {
         ["code_tmpl_start"] = "// @lc code=start",
         ["code_tmpl_end"] = "// @lc code=end",
         ["code"] = [[
-/*
-* @lc app=leetcode.cn id=%d lang=%s slug=%s
-*
-* # %d.%s
-*
-* https://leetcode.%s/problems/%s/description/
-*
-* %s (%0.2f%%)
-*
-%s
-*
-* test case:
-%s
-*/
+/*!
+ * # [%d.%s](https://leetcode.%s/problems/%s/description/)
+ *
+ * @lc app=leetcode.cn id=%d lang=%s slug=%s
+ *
+ * ## 状态
+ *
+ * %s (%0.2f%%)
+ *
+ * ## 问题描述
+ *
+ * %s
+ *
+ * ## 测试用例
+ *
+ * ```text
+ * %s
+ * ```
+ */
 
 %s
 %s
@@ -99,20 +117,25 @@ public static int main() {
         ["code_tmpl_start"] = "// @lc code=start",
         ["code_tmpl_end"] = "// @lc code=end",
         ["code"] = [[
-/*
-* @lc app=leetcode.cn id=%d lang=%s slug=%s
-*
-* # %d.%s
-*
-* https://leetcode.%s/problems/%s/description/
-*
-* %s (%0.2f%%)
-*
-%s
-*
-* test case:
-%s
-*/
+/*!
+ * # [%d.%s](https://leetcode.%s/problems/%s/description/)
+ *
+ * @lc app=leetcode.cn id=%d lang=%s slug=%s
+ *
+ * ## 状态
+ *
+ * %s (%0.2f%%)
+ *
+ * ## 问题描述
+ *
+ * %s
+ *
+ * ## 测试用例
+ *
+ * ```text
+ *   %s
+ * ```
+ */
 
 using namespace std;
 
@@ -129,21 +152,28 @@ int main() {
         ["code_tmpl_start"] = "// @lc code=start",
         ["code_tmpl_end"] = "// @lc code=end",
         ["code"] = [[
-/*
-* @lc app=leetcode.cn id=%d lang=%s slug=%s
-*
-* # %d.%s
-*
-* https://leetcode.%s/problems/%s/description/
-*
-* %s (%0.2f%%)
-*
-%s
-*
-* test case:
-%s
-*/
+/*!
+ * # [%d.%s](https://leetcode.%s/problems/%s/description/)
+ *
+ * @lc app=leetcode.cn id=%d lang=%s slug=%s
+ *
+ * ## 状态
+ *
+ * %s (%0.2f%%)
+ *
+ * ## 问题描述
+ *
+ * %s
+ *
+ * ## 测试用例
+ *
+ * ```text
+ *   %s
+ * ```
+ */
+
 #include <stdio.h>
+
 %s
 %s
 %s
@@ -157,20 +187,25 @@ int main() {
         ["code_tmpl_start"] = "// @lc code=start",
         ["code_tmpl_end"] = "// @lc code=end",
         ["code"] = [[
-/*
-* @lc app=leetcode.cn id=%d lang=%s slug=%s
-*
-* # %d.%s
-*
-* https://leetcode.%s/problems/%s/description/
-*
-* %s (%0.2f%%)
-*
-%s
-*
-* test case:
-%s
-*/
+/*!
+ * # [%d.%s](https://leetcode.%s/problems/%s/description/)
+ *
+ * @lc app=leetcode.cn id=%d lang=%s slug=%s
+ *
+ * ## 状态
+ *
+ * %s (%0.2f%%)
+ *
+ * ## 问题描述
+ *
+ * %s
+ *
+ * ## 测试用例
+ *
+ * ```text
+ *   %s
+ * ```
+ */
 
 %s
 %s

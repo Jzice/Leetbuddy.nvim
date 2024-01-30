@@ -291,9 +291,9 @@ function M.encode_code_by_templ(question_data)
         return question_data.code
     end
     return string.format(code_template.code,
-        question_data.question_id, question_data.lang,question_data.slug,
         question_data.question_id, question_data.title,
         config.domain, question_data.slug,
+        question_data.question_id, question_data.lang,question_data.slug,
         question_data.difficulty, question_data.ac_rate,
         question_data.content,
         question_data.test_case,
