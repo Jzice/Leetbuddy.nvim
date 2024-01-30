@@ -21,10 +21,13 @@ function M.load_question(slug)
     local title = data["title"]
     local content = data["content"]
 
-    local file_name = utils.get_file_name_by_slug(question_id, slug)
+    local id_slug = utils.get_file_name_by_slug(question_id, slug)
+    -- 根据id和slug生成文件名
+    local code_file_name = utils.get_file_name_by_title(question_id, title)
 
     if utils.get_cur_buf_slug() ~= slug then
-        local code_file_path = utils.get_code_file_path(file_name, config.language)
+        -- 获取代码文件路径
+        local code_file_path = utils.get_code_file_path(code_file_name, config.language)
         if utils.file_exists(code_file_path) then
             vim.api.nvim_command("edit! " .. code_file_path)
         else
@@ -58,8 +61,8 @@ function M.load_question(slug)
         end
     end
 
-    -- 保存测试用例数据到文件中
-    local test_case_path = utils.get_test_case_path(file_name)
+    -- 保存测试用例数据到测试用例文件中
+    local test_case_path = utils.get_test_case_path(id_slug)
     if not utils.file_exists(test_case_path) then
         vim.api.nvim_command(":silent !touch " .. test_case_path)
         local test_case_file = io.open(test_case_path, "w")
@@ -72,8 +75,8 @@ function M.load_question(slug)
         end
     end
 
-    -- 保存问题描述到文件中
-    local question_path = utils.get_question_path(file_name)
+    -- 保存问题描述到描述文件中
+    local question_path = utils.get_question_path(id_slug)
     if not utils.file_exists(question_path) then
         vim.api.nvim_command(":silent !touch " .. question_path)
         local question_file = io.open(question_path, "w")

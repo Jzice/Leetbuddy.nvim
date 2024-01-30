@@ -107,7 +107,11 @@ function M.get_cur_buf_question_id()
     return nil
 end
 
+-- 从当前缓冲区中获取slug
 function M.get_cur_buf_slug()
+    -- 先尝试从缓冲区中的问题url行中获取
+    -- 文件中(比如注释文档)包含`https:://leetcode.cn/problems/<slug>/description`
+    -- 从改行中获取
     local pattern_prefix = string.format("%s/problems/", config.website)
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
     for _, line in ipairs(lines)  do
@@ -119,15 +123,27 @@ function M.get_cur_buf_slug()
         end
     end
 
+    -- 如果没有从文件内容中获取到,
+    -- 先获取缓存区文件名
     local file_path = vim.api.nvim_buf_get_name(0)
     local file = vim.fn.fnamemodify(file_path, ":t:r")
+
+    -- 从文件名中解析出slug
     return M.get_slug_by_file(file)
 end
 
+-- 从文件名中获取slug
+-- 文件名格式为: 10.<slug>.<ext>
 function M.get_slug_by_file(file)
   return string.gsub(string.gsub(file, "^%d+%.", ""), "%.[^.]+$", "")
 end
 
+-- 通过title获取文件名
+function M.get_file_name_by_title(question_id, title)
+    return string.format("%d.%s", question_id, title)
+end
+
+-- 通过slug获取文件名
 function M.get_file_name_by_slug(question_id, slug)
     return string.format("%d.%s", question_id, slug)
 end
