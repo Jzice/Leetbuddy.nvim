@@ -31,6 +31,7 @@ function M.load_question(slug)
         if utils.file_exists(code_file_path) then
             vim.api.nvim_command("edit! " .. code_file_path)
         else
+          -- 写代码文件
             log.Debug(string.format("not found code file: %s", code_file_path))
             vim.api.nvim_command(":silent !touch " .. code_file_path)
             vim.api.nvim_command("edit! " .. code_file_path)
@@ -48,6 +49,7 @@ function M.load_question(slug)
                         code = table.code,
                     }
                     local code_src = utils.encode_code_by_templ(question_src_content)
+                    -- 将格式化后的代码写入到缓冲区
                     vim.api.nvim_buf_set_lines(
                         vim.api.nvim_get_current_buf(),
                         0,

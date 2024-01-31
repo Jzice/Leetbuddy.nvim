@@ -306,6 +306,7 @@ function M.encode_code_by_templ(question_data)
     if code_template == nil then
         return question_data.code
     end
+    -- todo: 格式化content
     return string.format(code_template.code,
         question_data.question_id, question_data.title,
         config.domain, question_data.slug,
