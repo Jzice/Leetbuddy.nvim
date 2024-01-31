@@ -10,7 +10,7 @@ local template_config = {
 #
 # @lc app=leetcode.cn id=%d lang=%s slug=%s
 #
-# ## 状态
+# ## 难度
 #
 # %s (%0.2f%%)
 #
